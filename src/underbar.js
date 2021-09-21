@@ -113,39 +113,21 @@
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
 
-    // transform values
-    // check transformed values for duplicates
-    // remove original values that are duplicates
-
-    if (iterator === null) {
+    if (iterator === undefined) {
       iterator = _.identity;
     }
 
     // copy will hold transformed values
-    var copy = [];
+    var transformedArray = [], results = [];
     for (var i = 0; i < array.length; i++) {
-      console.log(array[i]);
-      console.log(iterator(array[i]));
-      copy.push(iterator(array[i]));
-    }
-    // console.log('copy after transforming values: ');
-    // console.log(copy);
-
-    for (var i = 0; i < copy.length; i++) {
-      var curr = copy[i];
-      console.log('curr: ' + curr);
-      for (var j = 0; j < copy.length; j++) {
-        if (i === j) {
-          continue;
-        } else if (curr === copy[j]) {
-          copy = [...(copy.slice(0, j)), ...(copy.slice(j + 1))];
-        }
+      var item = array[i];
+      if (!transformedArray.includes(iterator(item))) {
+        transformedArray.push(iterator(item));
+        results.push(item);
       }
     }
 
-    // console.log('copy after removing duplicates: ');
-    // console.log(copy);
-    return copy;
+    return results;
   };
 
 
@@ -156,7 +138,7 @@
     // the members, it also maintains an array of results.
     var results = [];
 
-    _.each(collection, function(item) {
+    collection.forEach(function(item) {
       results.push(iterator(item));
     });
 
@@ -201,7 +183,45 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
+
+
+  // I:  collection with a function that adds to an accumulator
+  // O:  a single value of certain type
+  // C:
+  // E:  empty collection, no accumulator
   _.reduce = function(collection, iterator, accumulator) {
+    // handle empty collection
+    if (Array.isArray(collection) && collection.length === 0) {
+      return [];
+    } else {
+      if (JSON.stringify(collection) === '{}') {
+        return {};
+      }
+    }
+
+    // handle default assignment for accumulator
+    if (accumulator === undefined) {
+      accumulator = _.first(collection);
+      collection = collection.slice(1);
+    }
+    _.each(collection, function(item) {
+      accumulator = iterator(accumulator, item);
+    })
+
+
+    // iterate over every value
+
+      // apply function to values
+
+        // combine value to accumulator
+
+
+
+    return accumulator;
+
+
+
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -296,6 +316,7 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
