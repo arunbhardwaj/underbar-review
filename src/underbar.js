@@ -190,21 +190,6 @@
   // C:
   // E:  empty collection, no accumulator
   _.reduce = function(collection, iterator, accumulator) {
-    ////////////////////////
-    // What we had before;//
-    ////////////////////////
-    // if (accumulator === undefined) {
-    //   accumulator = collection[0];
-    //   for (var i = 1; i < collection.length; i++) {
-    //     accumulator = iterator(accumulator, collection[i]);
-    //   }
-    //   return accumulator;
-    // } else {
-    //   _.each(collection, function(item) {
-    //     accumulator = iterator(accumulator, item);
-    //   });
-    //   return accumulator;
-    // }
 
     var isAccumulatorDefined = (arguments.length === 3);
     if (!isAccumulatorDefined) {
@@ -248,7 +233,6 @@
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
 
-
     // iterate over all elements
       // if any element === false
     return _.reduce(collection, function(accumulator, item) {
@@ -291,12 +275,46 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
+
+  // I: object
+  // O:  object combined with all properties
+  // C:
+  // E: not passed an obj or if key-value pair is undefined?
   _.extend = function(obj) {
+    if (arguments.length > 1) {
+
+      // iterate over objects passed in
+      for (var i = 1; i < arguments.length; i++) {
+        var currentObject = arguments[i];
+        // iterate over properties of objects
+        for (var key in currentObject) {
+          obj[key] = currentObject[key];
+        }
+      }
+    }
+
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    if (arguments.length > 1) {
+      // iterate over objects passed in
+      for (var i = 1; i < arguments.length; i++) {
+        var currentObject = arguments[i];
+        // iterate over properties of objects
+        for (var key in currentObject) {
+          if (obj[key] !== undefined) {
+            continue;
+          } else {
+            obj[key] = currentObject[key];
+          }
+        }
+      }
+    }
+
+    return obj;
   };
 
 
@@ -339,7 +357,25 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+  // I: a function that will be called at least once
+  // O: a function that checks if @param func has already been invoked before
   _.memoize = function(func) {
+    var result;
+    // store args and results using object
+    var results = {};
+
+    // needs to be called only once for a given set of args
+    return function () {
+      var args = Array.prototype.slice.call(arguments);
+      args = JSON.stringify(args);
+
+      if (results[args] === undefined) {
+        results[args] = func.apply(null, arguments);
+        // return the value at that property
+      }
+
+      return results[args];
+    }
 
   };
 
@@ -350,6 +386,11 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = Array.prototype.slice.call(arguments, 2);
+    // args.splice(0, 2);
+    setTimeout(function() {
+      func.apply(this, args);
+    }, wait);
   };
 
 
@@ -364,6 +405,19 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    // copy the arrays
+    var output = array.slice();
+
+    // iterate over array
+    for (var i = output.length - 1; i >= 0; i--) {
+      var j = Math.floor(Math.random()*i);
+      var temp = output[i];
+      // swap values
+      output[i] = output[j];
+      output[j] = temp;
+    }
+
+    return output;
   };
 
 
