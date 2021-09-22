@@ -94,7 +94,8 @@
       it('fails for a collection of all-falsy values', function() {
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        expect(_.every([0, false, null, undefined], _.identity)).to.be.false;
+        // throw new Error('This test is missing.');
       });
 
       it('fails for a collection containing mixed falsy and truthy values', function() {
@@ -128,6 +129,7 @@
         return number % 2 === 0;
       };
 
+      var isGreaterThan10 = function(item) {return item > 10;};
 
       it('should fail by default for an empty collection', function() {
         expect(_.some([])).to.be.false;
@@ -152,7 +154,8 @@
       it('should fail for a set containing no matching values', function() {
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        expect(_.some([1, 2, 3], isGreaterThan10)).to.be.false;
+        // throw new Error('This test is missing.');
       });
 
       it('should pass for a collection containing one matching value', function() {
